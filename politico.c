@@ -11,7 +11,7 @@ typedef struct{
   char partido[100];
 }Politico;
 
-void cadastrarPolitico(Politico listaPoliticos[qntd_politicos]);
+int cadastrarPolitico(Politico listaPoliticos[qntd_politicos]);
 int menu();
 int verificaNome(char nome[100]);
 
@@ -36,16 +36,32 @@ int main(int argc, char const *argv[]) {
 }
 // --------------------- MAIN -------------------------------------------------
 
-void cadastrarPolitico(Politico listaPoliticos[qntd_politicos]){
+int cadastrarPolitico(Politico listaPoliticos[qntd_politicos]){
   Politico politico;
   char nome_aux[100];
-  printf("Qual o nome do politico que gostaria de cadastrar? Digite 0 para voltar ao menu inicial.\n");
-  fgets(nome_aux, 100, stdin);
-  int nomevalido = verificaNome(nome_aux);
-  printf("nome valido = %d\n", nomevalido);
+  int nomevalido = 0;
+
+  do {
+    printf("Qual o nome do politico que gostaria de cadastrar? Digite 0 para voltar ao menu inicial.\n");
+    fgets(nome_aux, 100, stdin);
+    if (nome_aux[0] == 48 && nome_aux[1] == 10) { // se digitar 0 volta
+      return 0;
+    }
+    nomevalido = verificaNome(nome_aux);
+    if(!nomevalido) printf("Nome inválido\n");
+  } while(nomevalido != 1);
+
+  if(qntd_politicos_cadastrados == 0){ // cadastrar primeiro politico
+    strcpy(listaPoliticos[qntd_politicos_cadastrados].nome, nome_aux);
+    printf("Qual o partido dele? ");
+    fgets(listaPoliticos[qntd_politicos_cadastrados].partido, 100, stdin);
+  }
+
+  return 0;
 }
 
-int verificaNome(char nome[100]){ // esta validação compara os caracteres com tabela ASCII
+// esta validação compara os caracteres com tabela ASCII
+int verificaNome(char nome[100]){
   int i = 0;
   int n = 0;
   int tem_espaco_seguido = 0;
@@ -58,7 +74,7 @@ int verificaNome(char nome[100]){ // esta validação compara os caracteres com 
     if(((nome[i] >= 97 && nome[i] <= 122) || (nome[i] >= 65 && nome[i] <= 90)) != 1){
       if (nome[i] == 32)  tem_espaco_seguido ++;
       if (nome[i] != 32)  tem_espaco_seguido = 0;
-      if(tem_espaco_seguido == 2) return 0; // verifica se tem dois espaços seguidos 
+      if(tem_espaco_seguido == 2) return 0; // verifica se tem dois espaços seguidos
       n++;
     }
     i++;
