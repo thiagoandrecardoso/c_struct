@@ -2,11 +2,71 @@
 #include<stdlib.h>
 #include <string.h>
 
-int menu();
+// variáveis globais
+int qntd_politicos = 100;
+int qntd_politicos_cadastrados = 0;
 
+typedef struct{
+  char nome[100];
+  char partido[100];
+}Politico;
+
+void cadastrarPolitico(Politico listaPoliticos[qntd_politicos]);
+int menu();
+int verificaNome(char nome[100]);
+
+// --------------------- MAIN -------------------------------------------------
 int main(int argc, char const *argv[]) {
-  int opcao = menu();
+  Politico listaPoliticos[qntd_politicos];
+  Politico politico;
+  int opcao = -1;
+  /**
+  * while abaixo é o loop principal do programa.
+  */
+  while (opcao != 0) {
+    opcao = menu();
+    switch (opcao) {
+      case 1:
+      cadastrarPolitico(listaPoliticos);
+      break;
+    }
+  }
+
   return 0;
+}
+// --------------------- MAIN -------------------------------------------------
+
+void cadastrarPolitico(Politico listaPoliticos[qntd_politicos]){
+  Politico politico;
+  char nome_aux[100];
+  printf("Qual o nome do politico que gostaria de cadastrar? Digite 0 para voltar ao menu inicial.\n");
+  fgets(nome_aux, 100, stdin);
+  int nomevalido = verificaNome(nome_aux);
+  printf("nome valido = %d\n", nomevalido);
+}
+
+int verificaNome(char nome[100]){ // esta validação compara os caracteres com tabela ASCII
+  int i = 0;
+  int n = 0;
+  int tem_espaco_seguido = 0;
+
+  if (nome[0] == 32) { // verifica se começa com espaço.
+    return 0;
+  }
+
+  while (nome[i] != '\0') { // varre o nome até encontrar o enter
+    if(((nome[i] >= 97 && nome[i] <= 122) || (nome[i] >= 65 && nome[i] <= 90)) != 1){
+      if (nome[i] == 32)  tem_espaco_seguido ++;
+      if (nome[i] != 32)  tem_espaco_seguido = 0;
+      if(tem_espaco_seguido == 2) return 0; // verifica se tem dois espaços seguidos 
+      n++;
+    }
+    i++;
+  }
+
+  n -= 2; // desconta o enter que contém na palavra.
+  if(n <= 0){return 1;}
+  else{return 0;}
 }
 
 int menu(){
@@ -19,6 +79,8 @@ int menu(){
   printf("\t\t5- Registrar voto de politico em emenda\n");
   printf("\t\t6- Excluir proposta de emenda constitucional (PEC)\n");
   printf("\t\t7- Exibir Meu Ranking por politico\n");
+  printf("\t\t0- Sair\n");
   scanf("%d", &opcao);
+  setbuf(stdin, NULL); // limpa buffer do teclado
   return opcao;
 }
