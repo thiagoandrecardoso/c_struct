@@ -31,6 +31,7 @@ void excluirPoliticos(Politico listaPoliticos[qntd_politicos]);
 void cadastrarPEC(PEC listaPEC[qntd_pec]);
 void registrarVoto(Politico listaPoliticos[qntd_politicos], PEC listaPEC[qntd_pec]);
 void exluirEmenta(PEC listaPEC[qntd_pec]);
+void afinidade(Politico listaPoliticos[qntd_politicos], PEC listaPEC[qntd_pec]);
 
 // --------------------- MAIN -------------------------------------------------
 int main(int argc, char const *argv[]) {
@@ -61,6 +62,12 @@ int main(int argc, char const *argv[]) {
       break;
       case 6:
       exluirEmenta(listaPEC);
+      break;
+      case 7:
+      afinidade(listaPoliticos, listaPEC);
+      break;
+      default:
+      printf("Comando inválido\n");
       break;
     }
   }
@@ -286,6 +293,19 @@ void exluirEmenta(PEC listaPEC[qntd_pec]){
       char lixo = getchar();
       i++;
     }
+  }
+}
+
+void afinidade(Politico listaPoliticos[qntd_politicos], PEC listaPEC[qntd_pec]){
+  for (int i = 0; i < qntd_politicos_cadastrados; i++) {
+    int soma_afinidade = 0;
+    for (int j = 0; j < qntd_pec_cadastrada; j++) {
+      if (listaPoliticos[i].listaPEC[j].favoravel == listaPEC[j].favoravel){
+        soma_afinidade++;
+      }
+    }
+    double porcentagem = (double) (soma_afinidade / qntd_pec_cadastrada);
+    printf("afinidade com o %s foi de %.2lf %%\n", listaPoliticos[i].nome, porcentagem * 100);
   }
 }
 
