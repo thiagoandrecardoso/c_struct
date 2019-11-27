@@ -166,6 +166,7 @@ void excluirPoliticos(Politico listaPoliticos[qntd_politicos]){
       for (int j = i; j < qntd_politicos_cadastrados - 1; j++) {
         listaPoliticos[j] = listaPoliticos[j + 1];
         qntd_politicos_cadastrados--;
+        printf("Politico excluido com sucesso!\n");
       }
     }else {
       char lixo = getchar();
