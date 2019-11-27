@@ -5,13 +5,20 @@
 // variáveis globais
 int qntd_politicos = 100;
 int qntd_politicos_cadastrados = 0;
+int qntd_pec = 100;
+int qntd_pec_cadastrada = 0;
 
 typedef struct{
   char nome[100];
   char partido[100];
-  //char PEC[200];
   int votos_pec;
 }Politico;
+
+typedef struct{
+  char nome[100];
+  char descricao[200];
+  int favoravel;
+}PEC;
 
 int cadastrarPolitico(Politico listaPoliticos[qntd_politicos]);
 int menu();
@@ -19,11 +26,13 @@ int verificaNome(char nome[100]);
 int verificaExistencia(Politico listaPoliticos[qntd_politicos], char nome[100], char partido[100], int x);
 void editarPoliticos(Politico listaPoliticos[qntd_politicos]);
 void excluirPoliticos(Politico listaPoliticos[qntd_politicos]);
+void cadastrarPEC(PEC listaPEC[qntd_pec]);
 
 // --------------------- MAIN -------------------------------------------------
 int main(int argc, char const *argv[]) {
   Politico listaPoliticos[qntd_politicos];
-  Politico politico;
+  PEC listaPEC[qntd_pec];
+  //Politico politico;
   int opcao = -1;
   /**
   * while abaixo é o loop principal do programa.
@@ -39,6 +48,9 @@ int main(int argc, char const *argv[]) {
       break;
       case 3:
       excluirPoliticos(listaPoliticos);
+      break;
+      case 4:
+      cadastrarPEC(listaPEC);
       break;
     }
   }
@@ -173,6 +185,22 @@ void excluirPoliticos(Politico listaPoliticos[qntd_politicos]){
       i++;
     }
   }
+}
+
+void cadastrarPEC(PEC listaPEC[qntd_pec]){
+  char opcao[2];
+  printf("Digite o nome da PEC.\n");
+  fgets(listaPEC[qntd_pec_cadastrada].nome, 100, stdin);
+  printf("Digite uma breve descricao sobre o que esta PEC faz :\n");
+  fgets(listaPEC[qntd_pec_cadastrada].descricao, 200, stdin);
+  printf("Qual a sua posicao sobr eesta PEC? Digite S para favoravel ou N para nao favoravel.\n");
+  fgets(opcao, 2, stdin);
+  if(opcao[0] == 83){
+    listaPEC[qntd_pec_cadastrada].favoravel = 1;
+  }else if(opcao[0] == 78){
+    listaPEC[qntd_pec_cadastrada].favoravel = 0;
+  }
+  printf("PEC cadastrada com sucesso.\n");
 }
 
 int menu(){
