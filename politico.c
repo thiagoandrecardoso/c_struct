@@ -20,6 +20,7 @@ typedef struct{
   char partido[100];
   int votos_pec;
   PEC listaPEC[100];
+  int favoravel[100];
 }Politico;
 
 int cadastrarPolitico(Politico listaPoliticos[qntd_politicos]);
@@ -240,23 +241,20 @@ void registrarVoto(Politico listaPoliticos[qntd_politicos], PEC listaPEC[qntd_pe
         fgets(voto, 2, stdin);
         if(voto[0] == 83){
           char lixo = getchar();
-          listaPEC[j].favoravel = 1;
-          listaPEC[j].votos++;
+          listaPoliticos[i].favoravel[j] = 1;
           int posicao = listaPoliticos[i].votos_pec;
           listaPoliticos[i].listaPEC[posicao] = listaPEC[j];
           listaPoliticos[i].votos_pec++;
           printf("Voto registrado com sucesso!\n");
         }else if (voto[0] == 78) {
           char lixo = getchar();
-          listaPEC[j].favoravel = 0;
-          listaPEC[j].votos++;
+          listaPoliticos[i].favoravel[j] = 0;
           int posicao = listaPoliticos[i].votos_pec;
           listaPoliticos[i].listaPEC[posicao] = listaPEC[j];
           listaPoliticos[i].votos_pec++;
           printf("Voto registrado com sucesso!\n");
         }else if (voto[0] == 65) {
           char lixo = getchar();
-          listaPEC[j].favoravel = -1;
           int posicao = listaPoliticos[i].votos_pec;
           listaPoliticos[i].listaPEC[posicao] = listaPEC[j];
           listaPoliticos[i].votos_pec++;
@@ -300,12 +298,12 @@ void afinidade(Politico listaPoliticos[qntd_politicos], PEC listaPEC[qntd_pec]){
   for (int i = 0; i < qntd_politicos_cadastrados; i++) {
     int soma_afinidade = 0;
     for (int j = 0; j < qntd_pec_cadastrada; j++) {
-      if (listaPoliticos[i].listaPEC[j].favoravel == listaPEC[j].favoravel){
+      if (listaPoliticos[i].favoravel[j] == listaPEC[j].favoravel){
         soma_afinidade++;
       }
     }
-    double porcentagem = (double) (soma_afinidade / qntd_pec_cadastrada);
-    printf("afinidade com o %s foi de %.2lf %%\n", listaPoliticos[i].nome, porcentagem * 100);
+    double porcentagem = (double) (soma_afinidade) / (double) (qntd_pec_cadastrada);
+    printf("afinidade com o %s foi de %.2lf %%\n", listaPoliticos[i].nome, (double) porcentagem * 100);
   }
 }
 
