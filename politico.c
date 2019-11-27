@@ -12,6 +12,7 @@ typedef struct{
   char nome[100];
   char descricao[200];
   int favoravel;
+  int votos;
 }PEC;
 
 typedef struct{
@@ -29,6 +30,7 @@ void editarPoliticos(Politico listaPoliticos[qntd_politicos]);
 void excluirPoliticos(Politico listaPoliticos[qntd_politicos]);
 void cadastrarPEC(PEC listaPEC[qntd_pec]);
 void registrarVoto(Politico listaPoliticos[qntd_politicos], PEC listaPEC[qntd_pec]);
+void exluirEmenta(PEC listaPEC[qntd_pec]);
 
 // --------------------- MAIN -------------------------------------------------
 int main(int argc, char const *argv[]) {
@@ -56,6 +58,9 @@ int main(int argc, char const *argv[]) {
       break;
       case 5:
       registrarVoto(listaPoliticos, listaPEC);
+      break;
+      case 6:
+      exluirEmenta(listaPEC);
       break;
     }
   }
@@ -183,8 +188,8 @@ void excluirPoliticos(Politico listaPoliticos[qntd_politicos]){
       for (int j = i; j < qntd_politicos_cadastrados - 1; j++) {
         listaPoliticos[j] = listaPoliticos[j + 1];
         qntd_politicos_cadastrados--;
-        printf("Politico excluido com sucesso!\n");
       }
+      printf("Politico excluido com sucesso!\n");
     }else {
       char lixo = getchar();
       i++;
@@ -229,6 +234,7 @@ void registrarVoto(Politico listaPoliticos[qntd_politicos], PEC listaPEC[qntd_pe
         if(voto[0] == 83){
           char lixo = getchar();
           listaPEC[j].favoravel = 1;
+          listaPEC[j].votos++;
           int posicao = listaPoliticos[i].votos_pec;
           listaPoliticos[i].listaPEC[posicao] = listaPEC[j];
           listaPoliticos[i].votos_pec++;
@@ -236,6 +242,7 @@ void registrarVoto(Politico listaPoliticos[qntd_politicos], PEC listaPEC[qntd_pe
         }else if (voto[0] == 78) {
           char lixo = getchar();
           listaPEC[j].favoravel = 0;
+          listaPEC[j].votos++;
           int posicao = listaPoliticos[i].votos_pec;
           listaPoliticos[i].listaPEC[posicao] = listaPEC[j];
           listaPoliticos[i].votos_pec++;
@@ -255,6 +262,28 @@ void registrarVoto(Politico listaPoliticos[qntd_politicos], PEC listaPEC[qntd_pe
         }
         j++;
       }
+      i++;
+    }
+  }
+}
+
+void exluirEmenta(PEC listaPEC[qntd_pec]){
+  char opcao[2];
+  printf("Existem %d PECs cadastradas.\n", qntd_pec_cadastrada);
+  int i = 0;
+  while (i < qntd_pec_cadastrada) {
+    printf("(%d/%d) %s - %s\n", i + 1, qntd_pec_cadastrada, listaPEC[i].nome, listaPEC[i].descricao);
+    printf("Deseja excluir esta PEC? Digite S para confirmar edicao ou N para nao.\n");
+    fgets(opcao, 2, stdin);
+    if(opcao[0] == 83){
+      char lixo = getchar();
+      for (int j = i; j < qntd_pec_cadastrada - 1; j++) {
+        listaPEC[j] = listaPEC[j + 1];
+        qntd_pec_cadastrada--;
+      }
+      printf("PPEC excluida com sucesso!\n");
+    } else {
+      char lixo = getchar();
       i++;
     }
   }
