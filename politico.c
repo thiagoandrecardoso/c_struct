@@ -10,15 +10,16 @@ int qntd_pec_cadastrada = 0;
 
 typedef struct{
   char nome[100];
-  char partido[100];
-  int votos_pec;
-}Politico;
-
-typedef struct{
-  char nome[100];
   char descricao[200];
   int favoravel;
 }PEC;
+
+typedef struct{
+  char nome[100];
+  char partido[100];
+  int votos_pec;
+  PEC listaPEC[100];
+}Politico;
 
 int cadastrarPolitico(Politico listaPoliticos[qntd_politicos]);
 int menu();
@@ -27,6 +28,7 @@ int verificaExistencia(Politico listaPoliticos[qntd_politicos], char nome[100], 
 void editarPoliticos(Politico listaPoliticos[qntd_politicos]);
 void excluirPoliticos(Politico listaPoliticos[qntd_politicos]);
 void cadastrarPEC(PEC listaPEC[qntd_pec]);
+void registrarVoto(Politico listaPoliticos[qntd_politicos], PEC listaPEC[qntd_pec]);
 
 // --------------------- MAIN -------------------------------------------------
 int main(int argc, char const *argv[]) {
@@ -51,6 +53,9 @@ int main(int argc, char const *argv[]) {
       break;
       case 4:
       cadastrarPEC(listaPEC);
+      break;
+      case 5:
+      registrarVoto(listaPoliticos, listaPEC);
       break;
     }
   }
@@ -201,6 +206,58 @@ void cadastrarPEC(PEC listaPEC[qntd_pec]){
     listaPEC[qntd_pec_cadastrada].favoravel = 0;
   }
   printf("PEC cadastrada com sucesso.\n");
+  qntd_pec_cadastrada++;
+}
+
+void registrarVoto(Politico listaPoliticos[qntd_politicos], PEC listaPEC[qntd_pec]){
+  int i = 0;
+  char opcao[2];
+  char voto[2];
+  printf("Existem %d politicos cadastrados\n", qntd_politicos_cadastrados);
+  while (i < qntd_politicos_cadastrados) {
+    int j =0;
+    printf("(%d/%d) Voce gostaria de registrar o voto do %s do partido %s?\nDigite S para confirmar edicao ou N para nao.\n",
+    i + 1, qntd_politicos_cadastrados, listaPoliticos[i].nome, listaPoliticos[i].partido);
+    fgets(opcao, 2, stdin);
+    if(opcao[0] == 83){
+      char lixo = getchar();
+      printf("Existem %d PECs cadastradas. Este politico votou em %d.\n", qntd_pec_cadastrada, listaPoliticos[i].votos_pec);
+      while (j < qntd_pec_cadastrada) {
+        printf("(%d/%d) %s - %s\n", j + 1, qntd_pec_cadastrada, listaPEC[j].nome, listaPEC[j].descricao);
+        printf("Gostaria de registrar o voto deste politico nesta PEC? Digite S para indicar que ele foi favoravel , N para indicar que ele nao foi favoravel , A para indicar que ele optou por nao votar e 0 para nao registrar voto dele nesta PEC\n");
+        fgets(voto, 2, stdin);
+        if(voto[0] == 83){
+          char lixo = getchar();
+          listaPEC[j].favoravel = 1;
+          int posicao = listaPoliticos[i].votos_pec;
+          listaPoliticos[i].listaPEC[posicao] = listaPEC[j];
+          listaPoliticos[i].votos_pec++;
+          printf("Voto registrado com sucesso!\n");
+        }else if (voto[0] == 78) {
+          char lixo = getchar();
+          listaPEC[j].favoravel = 0;
+          int posicao = listaPoliticos[i].votos_pec;
+          listaPoliticos[i].listaPEC[posicao] = listaPEC[j];
+          listaPoliticos[i].votos_pec++;
+          printf("Voto registrado com sucesso!\n");
+        }else if (voto[0] == 65) {
+          char lixo = getchar();
+          listaPEC[j].favoravel = -1;
+          int posicao = listaPoliticos[i].votos_pec;
+          listaPoliticos[i].listaPEC[posicao] = listaPEC[j];
+          listaPoliticos[i].votos_pec++;
+          printf("Optou por não votar\n");
+          printf("Voto registrado com sucesso!\n");
+        }else if (voto[0] == 48) {
+          char lixo = getchar();
+          printf("Não registrou voto\n");
+          printf("Voto registrado com sucesso!\n");
+        }
+        j++;
+      }
+      i++;
+    }
+  }
 }
 
 int menu(){
