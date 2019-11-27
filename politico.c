@@ -14,6 +14,7 @@ typedef struct{
 int cadastrarPolitico(Politico listaPoliticos[qntd_politicos]);
 int menu();
 int verificaNome(char nome[100]);
+int verificaExistencia(Politico listaPoliticos[qntd_politicos], char nome[100], char partido[100]);
 
 // --------------------- MAIN -------------------------------------------------
 int main(int argc, char const *argv[]) {
@@ -55,8 +56,30 @@ int cadastrarPolitico(Politico listaPoliticos[qntd_politicos]){
     strcpy(listaPoliticos[qntd_politicos_cadastrados].nome, nome_aux);
     printf("Qual o partido dele? ");
     fgets(listaPoliticos[qntd_politicos_cadastrados].partido, 100, stdin);
+    qntd_politicos_cadastrados++;
+  } else{
+    printf("Qual o partido dele? ");
+    char partido_aux[100];
+    fgets(partido_aux, 100, stdin);
+    int existe = verificaExistencia(listaPoliticos, nome_aux, partido_aux);
+    if (existe == 0) {
+      strcpy(listaPoliticos[qntd_politicos_cadastrados].nome, nome_aux);
+      strcpy(listaPoliticos[qntd_politicos_cadastrados].partido, partido_aux);
+      qntd_politicos_cadastrados++;
+    }
   }
 
+  return 0;
+}
+
+int verificaExistencia(Politico listaPoliticos[qntd_politicos], char nome[100], char partido[100]){
+  for (int i = 0; i < qntd_politicos_cadastrados; i++) {
+    if(strcmp(listaPoliticos[i].nome, nome) == 0){// retorna 0 se for iguais
+      if(strcmp(listaPoliticos[i].partido, partido) == 0){
+        return 1;
+      }
+    }
+  }
   return 0;
 }
 
