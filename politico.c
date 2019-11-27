@@ -14,7 +14,8 @@ typedef struct{
 int cadastrarPolitico(Politico listaPoliticos[qntd_politicos]);
 int menu();
 int verificaNome(char nome[100]);
-int verificaExistencia(Politico listaPoliticos[qntd_politicos], char nome[100], char partido[100]);
+int verificaExistencia(Politico listaPoliticos[qntd_politicos], char nome[100], char partido[100], int x);
+void editarPoliticos(Politico listaPoliticos[qntd_politicos]);
 
 // --------------------- MAIN -------------------------------------------------
 int main(int argc, char const *argv[]) {
@@ -29,6 +30,9 @@ int main(int argc, char const *argv[]) {
     switch (opcao) {
       case 1:
       cadastrarPolitico(listaPoliticos);
+      break;
+      case 2:
+      editarPoliticos(listaPoliticos);
       break;
     }
   }
@@ -61,7 +65,7 @@ int cadastrarPolitico(Politico listaPoliticos[qntd_politicos]){
     printf("Qual o partido dele? ");
     char partido_aux[100];
     fgets(partido_aux, 100, stdin);
-    int existe = verificaExistencia(listaPoliticos, nome_aux, partido_aux);
+    int existe = verificaExistencia(listaPoliticos, nome_aux, partido_aux, 0);
     if (existe == 0) {
       strcpy(listaPoliticos[qntd_politicos_cadastrados].nome, nome_aux);
       strcpy(listaPoliticos[qntd_politicos_cadastrados].partido, partido_aux);
@@ -72,10 +76,11 @@ int cadastrarPolitico(Politico listaPoliticos[qntd_politicos]){
   return 0;
 }
 
-int verificaExistencia(Politico listaPoliticos[qntd_politicos], char nome[100], char partido[100]){
+int verificaExistencia(Politico listaPoliticos[qntd_politicos], char nome[100], char partido[100], int x){
   for (int i = 0; i < qntd_politicos_cadastrados; i++) {
     if(strcmp(listaPoliticos[i].nome, nome) == 0){// retorna 0 se for iguais
       if(strcmp(listaPoliticos[i].partido, partido) == 0){
+        if (x == 1) printf("Ja existe %s do partido %s !\n", listaPoliticos[i].nome, listaPoliticos[i].partido);
         return 1;
       }
     }
@@ -106,6 +111,40 @@ int verificaNome(char nome[100]){
   n -= 2; // desconta o enter que contém na palavra.
   if(n <= 0){return 1;}
   else{return 0;}
+}
+
+void editarPoliticos(Politico listaPoliticos[qntd_politicos]){
+  char nome_aux[100];
+  char partido_aux[100];
+  char opcao[2];
+  int i = 0;
+  printf("Existem %d politicos\n", qntd_politicos_cadastrados);
+
+  while (i < qntd_politicos_cadastrados){
+    printf("(%d/%d) Voce gostaria de editar %s do partido %s?\nDigite S para confirmar edicao ou N para nao.\n",
+    i + 1, qntd_politicos_cadastrados, listaPoliticos[i].nome, listaPoliticos[i].partido);
+    fgets(opcao, 2, stdin);
+    if(opcao[0] == 83){
+      char lixo = getchar();
+      printf("Qual o novo nome?\n");
+      fgets(nome_aux, 100, stdin);
+      int nomevalido = verificaNome(nome_aux);
+      if(!nomevalido) {
+        printf("Nome inválido\n");
+      }else{
+        printf("Qual o partido dele?\n");
+        fgets(partido_aux, 100, stdin);
+        int existe = verificaExistencia(listaPoliticos, nome_aux, partido_aux, 1);
+        if (existe == 0) {
+          strcpy(listaPoliticos[i].nome, nome_aux);
+          strcpy(listaPoliticos[i].partido, partido_aux);
+          i++;
+        }
+      }
+    }else{
+      i++;
+    }
+  }
 }
 
 int menu(){
