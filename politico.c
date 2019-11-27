@@ -9,6 +9,8 @@ int qntd_politicos_cadastrados = 0;
 typedef struct{
   char nome[100];
   char partido[100];
+  //char PEC[200];
+  int votos_pec;
 }Politico;
 
 int cadastrarPolitico(Politico listaPoliticos[qntd_politicos]);
@@ -16,6 +18,7 @@ int menu();
 int verificaNome(char nome[100]);
 int verificaExistencia(Politico listaPoliticos[qntd_politicos], char nome[100], char partido[100], int x);
 void editarPoliticos(Politico listaPoliticos[qntd_politicos]);
+void excluirPoliticos(Politico listaPoliticos[qntd_politicos]);
 
 // --------------------- MAIN -------------------------------------------------
 int main(int argc, char const *argv[]) {
@@ -34,6 +37,9 @@ int main(int argc, char const *argv[]) {
       case 2:
       editarPoliticos(listaPoliticos);
       break;
+      case 3:
+      excluirPoliticos(listaPoliticos);
+      break;
     }
   }
 
@@ -42,7 +48,7 @@ int main(int argc, char const *argv[]) {
 // --------------------- MAIN -------------------------------------------------
 
 int cadastrarPolitico(Politico listaPoliticos[qntd_politicos]){
-  Politico politico;
+  //Politico politico;
   char nome_aux[100];
   int nomevalido = 0;
 
@@ -142,6 +148,27 @@ void editarPoliticos(Politico listaPoliticos[qntd_politicos]){
         }
       }
     }else{
+      char lixo = getchar();
+      i++;
+    }
+  }
+}
+
+void excluirPoliticos(Politico listaPoliticos[qntd_politicos]){
+  char opcao[2];
+  int i = 0;
+  while (i < qntd_politicos_cadastrados){
+    printf("(%d/%d) Voce gostaria de excluir %s do partido %s?\nEste politico votou em %d PEC\nDigite S para confirmar edicao ou N para nao.\n",
+    i + 1, qntd_politicos_cadastrados, listaPoliticos[i].nome, listaPoliticos[i].partido, listaPoliticos[i].votos_pec);
+    fgets(opcao, 2, stdin);
+    if(opcao[0] == 83){
+      char lixo = getchar();
+      for (int j = i; j < qntd_politicos_cadastrados - 1; j++) {
+        listaPoliticos[j] = listaPoliticos[j + 1];
+        qntd_politicos_cadastrados--;
+      }
+    }else {
+      char lixo = getchar();
       i++;
     }
   }
